@@ -1,158 +1,318 @@
 <template>
-    <div class="Register">
-        <form class="registerForm">
-            <h2 class="registartion">Registration</h2>
-            <br/>
-            <div class="form-group">
-                <label class="inputType">First Name</label>
-                <input type="text" class="Input" placeholder="Enter First Name"/>
-            </div>
+  <div class="container">
+    <div class="login">Registration</div>
+    <div class="form-container">
+      <form novalidate class="md-layout" @submit.prevent="validateUser">
+            <br/><br/>
+        <md-field :class="getValidationClass('FirstName')">
+          <label for="FirstName">First Name</label>
+          <md-input
+            name="FirstName"
+            class="FirstName"
+            placeholder="Enter First Name"
+            v-model="form.FirstName"
+            :disabled="sending"
+          ></md-input>
 
-            <br/>
+          <span class="md-error" v-if="!$v.form.FirstName.required"
+            >First Name is required</span
+          >
+          <span class="md-error" v-else-if="!$v.form.FirstName.minlength"
+            >First Name should have at least 3 characters</span
+          >
+        </md-field>
 
-            <div class="form-group">
-                <label class="inputType">Last Name</label>
-                <input type="text" class="Input" placeholder="Enter Last Name"/>
-            </div>
+        <md-field :class="getValidationClass('LastName')">
+          <label for="LastName">Last Name</label>
+          <md-input
+            name="LastName"
+            class="LastName"
+            placeholder="Enter Last Name"
+            v-model="form.LastName"
+            :disabled="sending"
+          ></md-input>
 
-            <br/>
+          <span class="md-error" v-if="!$v.form.LastName.required"
+            >Last Name is required</span
+          >
+          <span class="md-error" v-else-if="!$v.form.LastName.minlength"
+            >Last Name should have at least 3 characters</span
+          >
+        </md-field>
+        
+        <md-field :class="getValidationClass('UserRole')">
+          <label for="UserRole">User Role</label>
+          <md-input
+            name="UserRole"
+            class="UserRole"
+            placeholder="Enter User Role"
+            v-model="form.UserRole"
+            :disabled="sending"
+          ></md-input>
 
-            <div class="form-group">
-                <label class="inputType">User Role</label>
-                <input type="text" class="Input" placeholder="Enter User Role"/>
-            </div>
+          <span class="md-error" v-if="!$v.form.UserRole.required"
+            >User Role is required</span
+          >
+          <span class="md-error" v-else-if="!$v.form.UserRole.minlength"
+            >User Role should have at least 3 characters</span
+          >
+        </md-field>
+        <md-field :class="getValidationClass('EmailId')">
+          <label for="EmailId">Email Id</label>
+          <md-input
+            name="EmailId"
+            class="EmailId"
+            placeholder="Enter Email Address"
+            v-model="form.EmailId"
+            :disabled="sending"
+          ></md-input>
 
-            <br/>
+          <span class="md-error" v-if="!$v.form.EmailId.required"
+            >EmailId is required</span
+          >
+          <span class="md-error" v-else-if="!$v.form.EmailId.minlength"
+            >EmailId should have at least Eight characters</span
+          >
+        </md-field>
+        <md-field :class="getValidationClass('Password')">
+          <label for="Password">Password</label>
+          <md-input
+            name="Password"
+            class="Password"
+            placeholder="Enter a Password"
+            v-model="form.Password"
+            type="password"
+            :disabled="sending"
+          ></md-input>
 
-            <div class="form-group">
-                <label class="inputType">Email Id</label>
-                <input type="email" class="Input" placeholder="Enter Email Address"/>
-            </div>
+          <span class="md-error" v-if="!$v.form.Password.required"
+            >Password is required</span
+          >
+          <span class="md-error" v-else-if="!$v.form.Password.minlength"
+            >Invalid Password</span
+          >
+        </md-field>
 
-            <br/>
-
-            <div class="form-group">
-                <label class="inputType">Password</label>
-                <input type="password" class="Input" placeholder="Enter Password"/>
-            </div>
-
-            <br/>
-            <div class="Button">
-                <button  class="signButton">Login</button>
-                <button type="submit" class="signUp">Sign Up</button>
-            </div>
-        </form>
+        <md-card-actions class="button">
+          <md-button
+            class="md-dense md-primary"
+            > Sign In</md-button
+          >
+          <md-button
+            type="submit"
+            class="md-raised md-primary"
+            :disabled="sending"
+            >Sign Up</md-button
+          >
+        </md-card-actions>
+      </form>
     </div>
+    <md-snackbar
+      :md-position="position"
+      :md-active.sync="isLogin"
+      md-persistent
+    >
+      <span>Login Successful!</span>
+      <md-button type="submit" class="md-primary" :disabled="sending"
+        >Ok</md-button
+      >
+    </md-snackbar>
+    <md-snackbar
+      :md-position="position"
+      :md-active.sync="invalidCredentials"
+      md-persistent
+    >
+      <span>Invalid Credentials!</span>
+      <md-button class="md-primary" @click="invalidCredentials = false"
+        >Ok</md-button
+      >
+    </md-snackbar>
+  </div>
 </template>
 
 <script>
-    export default {
-        data() {
-            return {}
-        }
+import userService from "../services/userService.js";
+import { validationMixin } from "vuelidate";
+import {
+  required,
+  email,
+  minLength,
+  maxLength
+} from "vuelidate/lib/validators";
+export default {
+  name: "Login",
+  mixins: [validationMixin],
+  data() {
+    return {
+      form: {
+        FirstName: null,
+        LastName: null,
+        UserRole:null,
+        EmailId: null,
+        Password: null
+      },
+      position: "left",
+      sending: false,
+      isLogin: false,
+      invalidCredentials: false,
+      token: null
+    };
+  },
+  validations: {
+    form: {
+     FirstName: {
+        required,
+        minLength: minLength(3)
+      },
+      LastName: {
+        required,
+        minLength: minLength(3)
+      },
+     UserRole: {
+        required,
+        minLength: minLength(3)
+      },
+      EmailId: {
+        required,
+        minLength: minLength(6)
+      },
+      Password: {
+        required,
+        minLength: minLength(8)
+      }
     }
+  },
+  methods: {
+    register() {
+      this.sending = true;
+      let user = {
+        firstName: this.form.FirstName,
+        lastName: this.form.LastName,
+        userRole:this.form.UserRole,
+        email: this.form.EmailId,
+        password: this.form.Password,
+        cartId: ""
+      };
+      userService
+        .register(user)
+        .then(result => {
+          if (result.status == "200") {
+            this.isLogin = true;
+            //console.log("Logged In", result.data.email);
+            localStorage.setItem("fundoo-token", result.data.id);
+            localStorage.setItem(
+              "fundoo-user-firstName",
+              result.data.firstName
+            );
+            localStorage.setItem("fundoo-user-lastName", result.data.lastName);
+            localStorage.setItem("fundoo-user-email", result.data.email);
+            window.location.href = "/dashboard";
+          }
+        })
+        .then(() => {
+          this.sending = false;
+          this.clearForm();
+        })
+        .catch(error => {
+          console.log("Error:", error.response.status);
+          if (error.response.status == "401") {
+            this.invalidCredentials = true;
+            this.clearForm();
+            this.sending = false;
+          }
+        });
+    },
+    getValidationClass(fieldName) {
+      const field = this.$v.form[fieldName];
+      if (field) {
+        return {
+          "md-invalid": field.$invalid && field.$dirty
+        };
+      }
+    },
+    validateUser() {
+      this.$v.$touch();
+      if (!this.$v.$invalid) {
+        this.register();
+      }
+    },
+    clearForm() {
+      this.$v.$reset();
+      this.form.FirstName = null;
+      this.form.LastName = null;
+      this.form.UserRole = null;
+      this.form.EmailId = null;
+      this.form.Password = null;
+    }
+  }
+};
 </script>
 
 <style lang="scss" scoped>
-    .Register{
-        display: flex;
-        justify-content: center;
-        align-items: center;
+.container {
+  position: relative;
+  left: 30.5vw;
+  top: 10vh;
+  padding-top: 2%;
+  padding-bottom: 5%;
+  margin-bottom: 5%;
+  width: 40%;
+  border-radius: 5px;
+  border: 1px solid #913C4D;    
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0px 1px 5px 2px rgba($color: #913C4D, $alpha: 0.2);
+}
+.login {
+    margin-top: 4vh;
+    margin-bottom: 4vh;
+    color: #913C4D;
+    font-size: 26px;
+    font-weight: bold;
+}
+.logo{
+    width: 120px;
+    height: 120px;
+    border-radius: 50px;
+    margin-top: 10%;
+}
+.md-layout{
+    display:flex;
+    justify-content: center;
+    align-items: center !important;
+}
+.login-helper {
+  font-size: 17px;
+  position: relative;
+  top: 7vh;
+}
+.form-container {
+  position: relative;
+  top: 8%;
+  left: 10%;
+  width: 80%;
+}
+.md-card-actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  position: relative;
+  top: 3vh;
+  width: 100vw;
+}
+//Ipad Horizontal
+@media (min-width: 1000px) and (max-width: 1024px) {
+    .container{
+        margin-top: 170px;
     }
-    .registartion{
-        color: #913C4D;
-        font-size: 26px;
-        font-weight: bold;
-    }
-    .registerForm{
-        padding-top: 3%;
-        padding-bottom: 5%;
-        width: 100%;
-        max-width:530px;
-        border: 1px solid #913C4D;  
-        border-radius: 5px; 
-        margin-top: 5%;
-        margin-bottom: 5%; 
-    }
-    .form-group{
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-    }
-    .inputType{
-        width: 70%;
-        font-size: 18px;
-        font-weight: bold;
-        color: #6E6360;
-        margin-bottom: 7px;
-        padding-right: 50%;
-    }
-    .Input{
-        width: 70%;
-        padding: 13px 15px 13px 15px;
-        border-radius: 5px;
-        border: 1px solid #DDACBE;
-        outline: none;
-    }
-    .Button{
-        display: flex;
-        justify-content: space-around;
-        flex-direction: row;
-        align-items: center;
-        margin-top: 3%;
-    }
-    .signButton{
-        padding: 10px 18px 10px 18px;
-        border-radius: 5px;
-        outline: none;
-        border: none;
-        border-color: #3371b5;
-        background-color: #3371b5;
-        color: white;
-        font-weight: bold;
-        font-size: 16px;
-    }
-    .signUp{
-        padding: 10px 18px 10px 18px;
-        border-radius: 5px;
-        outline: none;
-        border: none;
-        font-size: 16px;
-    }
-    @media screen and (max-width: 1024px) {
-        .registerForm{
-            padding-bottom: 5%;
-            margin-top: 30%;
-        }
-    }
-    @media screen and (max-width: 768px) {
-        .registerForm{
-            margin-top: 15%;
-        }
-    }
-    @media screen and (max-width: 540px) {
-        .registerForm{
-            margin-top: 0%;
-            padding-top: 0%;
-            border: none;
-        }
-        .Button{
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .signUp{
-            margin-top: 4%;
-            width: 180px;
-        }
-        .signButton{
-            width:180px;
-        }
-    }
-     @media screen and (max-width: 360px) {
-        .Form{
-            margin-top: 0%;
-        }
-     }
+  .logo{
+      margin-bottom:50px ;
+  }
+}
+@media screen and (max-width: 540px) {
+  .container {
+    width: 70vw;
+    height: 100vw;
+  }
+}
 </style>
