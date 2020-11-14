@@ -44,7 +44,7 @@
         <md-card-actions class="button">
           <md-button
             class="md-dense md-primary"
-            href="http://fundoonotes.incubation.bridgelabz.com"
+            href="/register"
             >Create Account</md-button
           >
           <md-button
@@ -108,7 +108,7 @@ export default {
     form: {
       EmailId: {
         required,
-        minLength: minLength(6)
+        minLength: minLength(6),
       },
       Password: {
         required,
@@ -129,14 +129,15 @@ export default {
         .then(result => {
           if (result.status == "200") {
             this.isLogin = true;
-            //console.log("Logged In", result.data.email);
-            localStorage.setItem("token", result.data.id);
+            console.log("Logged In", result.data);
+            localStorage.setItem("Token", result.data.jsonToken);
             localStorage.setItem(
-              "user-firstName",
-              result.data.firstName
+              "First Name",
+              result.data.data.firstName
             );
-            localStorage.setItem("user-lastName", result.data.lastName);
-            localStorage.setItem("user-emailId", result.data.emailId);
+            localStorage.setItem("User Role", result.data.data.userRole);
+            localStorage.setItem("Last Name", result.data.data.lastName);
+            localStorage.setItem("Email Id", result.data.data.emailId);
             window.location.href = "/dashboard";
           }
         })

@@ -71,7 +71,7 @@
             >EmailId is required</span
           >
           <span class="md-error" v-else-if="!$v.form.EmailId.minlength"
-            >EmailId should have at least Eight characters</span
+            >EmailId should have at least 6 characters</span
           >
         </md-field>
         <md-field :class="getValidationClass('Password')">
@@ -96,6 +96,7 @@
         <md-card-actions class="button">
           <md-button
             class="md-dense md-primary"
+            href="/"
             > Sign In</md-button
           >
           <md-button
@@ -109,10 +110,10 @@
     </div>
     <md-snackbar
       :md-position="position"
-      :md-active.sync="isLogin"
+      :md-active.sync="isRegister"
       md-persistent
     >
-      <span>Login Successful!</span>
+      <span>Registration Successful!</span>
       <md-button type="submit" class="md-primary" :disabled="sending"
         >Ok</md-button
       >
@@ -153,7 +154,7 @@ export default {
       },
       position: "left",
       sending: false,
-      isLogin: false,
+      isRegister: false,
       invalidCredentials: false,
       token: null
     };
@@ -189,7 +190,7 @@ export default {
         firstName: this.form.FirstName,
         lastName: this.form.LastName,
         userRole:this.form.UserRole,
-        email: this.form.EmailId,
+        emailId: this.form.EmailId,
         password: this.form.Password,
         cartId: ""
       };
@@ -197,16 +198,9 @@ export default {
         .register(user)
         .then(result => {
           if (result.status == "200") {
-            this.isLogin = true;
-            //console.log("Logged In", result.data.email);
-            localStorage.setItem("fundoo-token", result.data.id);
-            localStorage.setItem(
-              "fundoo-user-firstName",
-              result.data.firstName
-            );
-            localStorage.setItem("fundoo-user-lastName", result.data.lastName);
-            localStorage.setItem("fundoo-user-email", result.data.email);
-            window.location.href = "/dashboard";
+            this.isRegister = true;
+            console.log("Registration", result.data);
+            window.location.href = "/";
           }
         })
         .then(() => {
