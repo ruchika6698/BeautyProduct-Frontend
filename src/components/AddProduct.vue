@@ -1,119 +1,98 @@
 <template>
   <div class="container">
-    <div class="login">Registration</div>
+    <div class="add">Add Product</div>
     <div class="form-container">
       <form novalidate class="md-layout" @submit.prevent="validateUser">
             <br/><br/>
-        <md-field :class="getValidationClass('FirstName')">
-          <label for="FirstName">First Name</label>
+        <md-field :class="getValidationClass('ProductName')">
+          <label for="ProductName">Product Name</label>
           <md-input
-            name="FirstName"
-            class="FirstName"
-            placeholder="Enter First Name"
-            v-model="form.FirstName"
+            name="ProductName"
+            class="ProductName"
+            placeholder="Enter Product Name"
+            v-model="form.ProductName"
             :disabled="sending"
           ></md-input>
 
-          <span class="md-error" v-if="!$v.form.FirstName.required"
-            >First Name is required</span
+          <span class="md-error" v-if="!$v.form.ProductName.required"
+            >Product Name is required</span
           >
-          <span class="md-error" v-else-if="!$v.form.FirstName.minlength"
-            >First Name should have at least 3 characters</span
+          <span class="md-error" v-else-if="!$v.form.ProductName.minlength"
+            >Product Name should have at least 3 characters</span
           >
         </md-field>
 
-        <md-field :class="getValidationClass('LastName')">
-          <label for="LastName">Last Name</label>
+        <md-field :class="getValidationClass('ProductBrand')">
+          <label for="ProductBrand ">Product Brand</label>
           <md-input
-            name="LastName"
-            class="LastName"
-            placeholder="Enter Last Name"
-            v-model="form.LastName"
+            name="ProductBrand "
+            class="ProductBrand "
+            placeholder="Enter Product Brand "
+            v-model="form.ProductBrand"
             :disabled="sending"
           ></md-input>
 
-          <span class="md-error" v-if="!$v.form.LastName.required"
-            >Last Name is required</span
+          <span class="md-error" v-if="!$v.form.ProductBrand.required"
+            >Product Brand is required</span
           >
-          <span class="md-error" v-else-if="!$v.form.LastName.minlength"
-            >Last Name should have at least 3 characters</span
+          <span class="md-error" v-else-if="!$v.form.ProductBrand.minlength"
+            >Product Brand should have at least 3 characters</span
           >
         </md-field>
         
-        <md-field :class="getValidationClass('UserRole')">
-          <label for="UserRole">User Role</label>
+        <md-field :class="getValidationClass('ProductDescription')">
+          <label for="ProductDescription ">Product Description </label>
           <md-input
-            name="UserRole"
-            class="UserRole"
-            placeholder="Enter User Role"
-            v-model="form.UserRole"
+            name="ProductDescription"
+            class="ProductDescription "
+            placeholder="Enter Product Description "
+            v-model="form.ProductDescription"
             :disabled="sending"
           ></md-input>
 
-          <span class="md-error" v-if="!$v.form.UserRole.required"
-            >User Role is required</span
+          <span class="md-error" v-if="!$v.form.ProductDescription.required"
+            >Product Description is required</span
           >
-          <span class="md-error" v-else-if="!$v.form.UserRole.minlength"
-            >User Role should have at least 3 characters</span
+          <span class="md-error" v-else-if="!$v.form.ProductDescription.minlength"
+            >Product Description  should have at least 3 characters</span
           >
         </md-field>
-        <md-field :class="getValidationClass('EmailId')">
-          <label for="EmailId">Email Id</label>
+        <md-field :class="getValidationClass('Price')">
+          <label for="Price ">Price </label>
           <md-input
-            name="EmailId"
-            class="EmailId"
-            placeholder="Enter Email Address"
-            v-model="form.EmailId"
+            name="Price "
+            class="Price "
+            placeholder="Enter Price "
+            v-model="form.Price"
             :disabled="sending"
           ></md-input>
 
-          <span class="md-error" v-if="!$v.form.EmailId.required"
-            >EmailId is required</span
+          <span class="md-error" v-if="!$v.form.Price.required"
+            >Price is required</span
           >
-          <span class="md-error" v-else-if="!$v.form.EmailId.minlength"
-            >EmailId should have at least 6 characters</span
-          >
+          
         </md-field>
-        <md-field :class="getValidationClass('Password')">
-          <label for="Password">Password</label>
-          <md-input
-            name="Password"
-            class="Password"
-            placeholder="Enter a Password"
-            v-model="form.Password"
-            type="password"
-            :disabled="sending"
-          ></md-input>
-
-          <span class="md-error" v-if="!$v.form.Password.required"
-            >Password is required</span
-          >
-          <span class="md-error" v-else-if="!$v.form.Password.minlength"
-            >Invalid Password</span
-          >
-        </md-field>
+        <div>
+          <label for="Image" class="Image">Image :</label>
+          <input type="file" @change="onFileChange">
+        </div>
 
         <md-card-actions class="button">
-          <md-button
-            class="md-dense md-primary"
-            href="/"
-            > Sign In</md-button
-          >
           <md-button
             type="submit"
             class="md-raised md-primary"
             :disabled="sending"
-            >Sign Up</md-button
+            >Submit</md-button
           >
         </md-card-actions>
       </form>
     </div>
     <md-snackbar
       :md-position="position"
-      :md-active.sync="isRegister"
+      :md-active.sync="isSubmit"
       md-persistent
     >
-      <span>Registration Successful!</span>
+      <span>Data added successful</span>
       <md-button type="submit" class="md-primary" :disabled="sending"
         >Ok</md-button
       >
@@ -141,49 +120,64 @@ import {
   maxLength
 } from "vuelidate/lib/validators";
 export default {
-  name: "Register",
+  name: "Add Product",
   mixins: [validationMixin],
   data() {
     return {
       form: {
-        FirstName: null,
-        LastName: null,
-        UserRole:null,
+        ProductName: null,
+        ProductBrand : null,
+        ProductDescription :null,
         EmailId: null,
-        Password: null
+        Image : null
       },
       position: "left",
       sending: false,
-      isRegister: false,
+      isSubmit: false,
       invalidCredentials: false,
       token: null
     };
   },
   validations: {
     form: {
-     FirstName: {
+     ProductName: {
         required,
         minLength: minLength(3)
       },
-      LastName: {
+      ProductBrand : {
         required,
         minLength: minLength(3)
       },
-     UserRole: {
+     ProductDescription : {
         required,
         minLength: minLength(3)
       },
-      EmailId: {
+      Price : {
         required,
-        minLength: minLength(6)
       },
-      Password: {
+      Image : {
         required,
-        minLength: minLength(8)
       }
     }
   },
   methods: {
+       onFileChange(e) {
+      var files = e.target.files || e.dataTransfer.files;
+      if (!files.length)
+        return;
+      this.createImage(files[0]);
+    },
+    createImage(file) {
+      var image = new Image();
+      var reader = new FileReader();
+      var vm = this;
+
+      reader.onload = (e) => {
+        vm.image = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    },
+
     register() {
       this.sending = true;
       let user = {
@@ -231,11 +225,11 @@ export default {
     },
     clearForm() {
       this.$v.$reset();
-      this.form.FirstName = null;
-      this.form.LastName = null;
-      this.form.UserRole = null;
-      this.form.EmailId = null;
-      this.form.Password = null;
+      this.form.ProductName = null;
+      this.form.ProductBrand = null;
+      this.form.ProductDescription = null;
+      this.form.Price = null;
+      this.form.Image = null;
     }
   }
 };
@@ -245,7 +239,7 @@ export default {
 .container {
   position: relative;
   left: 30.5vw;
-  top: 10vh;
+  top: 6vh;
   padding-top: 2%;
   padding-bottom: 5%;
   margin-bottom: 5%;
@@ -256,7 +250,7 @@ export default {
   flex-direction: column;
   box-shadow: 0px 1px 5px 2px rgba($color: #913C4D, $alpha: 0.2);
 }
-.login {
+.add {
     margin-top: 4vh;
     margin-bottom: 4vh;
     color: #913C4D;
@@ -273,11 +267,6 @@ export default {
     display:flex;
     justify-content: center;
     align-items: center !important;
-}
-.login-helper {
-  font-size: 17px;
-  position: relative;
-  top: 7vh;
 }
 .form-container {
   position: relative;

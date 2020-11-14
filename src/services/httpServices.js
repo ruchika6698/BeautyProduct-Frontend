@@ -1,6 +1,6 @@
 import axios from "axios";
 axios.defaults.headers.common = {
-  Authorization: `${localStorage.getItem("fundoo-token")}`
+  Authorization: `${localStorage.getItem("Token")}`
 };
 export default {
   post(url, data) {
