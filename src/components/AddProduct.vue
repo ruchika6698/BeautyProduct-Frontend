@@ -74,7 +74,7 @@
         </md-field>
         <div>
           <label for="Image" class="Image">Image :</label>
-          <input type="file" @change="onFileChange">
+          <input type="file" @change="onFileSelected">
         </div>
 
         <md-card-actions class="button">
@@ -111,16 +111,15 @@
 </template>
 
 <script>
-import userService from "../services/userService.js";
+import productServices from "../services/productServices.js";
 import { validationMixin } from "vuelidate";
 import {
   required,
-  email,
   minLength,
   maxLength
 } from "vuelidate/lib/validators";
 export default {
-  name: "Add Product",
+  name: "AddProduct",
   mixins: [validationMixin],
   data() {
     return {
@@ -128,14 +127,13 @@ export default {
         ProductName: null,
         ProductBrand : null,
         ProductDescription :null,
-        EmailId: null,
+        Price: null,
         Image : null
       },
       position: "left",
       sending: false,
       isSubmit: false,
       invalidCredentials: false,
-      token: null
     };
   },
   validations: {
@@ -161,39 +159,36 @@ export default {
     }
   },
   methods: {
-       onFileChange(e) {
-      var files = e.target.files || e.dataTransfer.files;
-      if (!files.length)
-        return;
-      this.createImage(files[0]);
-    },
-    createImage(file) {
-      var image = new Image();
-      var reader = new FileReader();
-      var vm = this;
+       onFileSelected(event){
+       //store the image details
+       this.image = event.target.files[0];
+       console.log(this.image);
+       // for url purpose
+       let image = event.target.files[0];
+       let reader = new FileReader();
+       reader.readAsDataURL(image);
+        console.log(reader);
+       reader.onload = event => {
+        this.url = event.target.result;
+       }
+   },
 
-      reader.onload = (e) => {
-        vm.image = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    },
-
-    register() {
+  addProduct() {
       this.sending = true;
-      let user = {
-        firstName: this.form.FirstName,
-        lastName: this.form.LastName,
-        userRole:this.form.UserRole,
-        emailId: this.form.EmailId,
-        password: this.form.Password,
-      };
-      userService
-        .register(user)
+      var formData = new FormData();
+      formData.append("productName", this.form.ProductName);
+      formData.append("productBrand", this.form.ProductBrand);
+      formData.append("productDescription", this.form.ProductDescription);
+      formData.append("price", this.form.Price);
+      formData.append("image", this.image);
+    console.log("Form Data",formData);
+      productServices
+        .addProduct(formData)
         .then(result => {
           if (result.status == "200") {
-            this.isRegister = true;
-            console.log("Registration", result.data);
-            window.location.href = "/";
+            this.isSubmit = true;
+            console.log("Add Product", result);
+            window.location.href = "/dashboard";
           }
         })
         .then(() => {
@@ -219,17 +214,17 @@ export default {
     },
     validateUser() {
       this.$v.$touch();
-      if (!this.$v.$invalid) {
-        this.register();
+      if (this.$v.$invalid) {
+        this.addProduct();
       }
     },
     clearForm() {
       this.$v.$reset();
-      this.form.ProductName = null;
-      this.form.ProductBrand = null;
-      this.form.ProductDescription = null;
-      this.form.Price = null;
-      this.form.Image = null;
+      this.ProductName = null;
+      this.ProductBrand = null;
+      this.ProductDescription = null;
+      this.Price = null;
+      this.Image = null;
     }
   }
 };

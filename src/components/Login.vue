@@ -137,8 +137,9 @@ export default {
             localStorage.setItem("User Role", result.data.data.userRole);
             localStorage.setItem("Last Name", result.data.data.lastName);
             localStorage.setItem("Email Id", result.data.data.emailId);
-            window.location.href = "/dashboard";
-          }
+            setTimeout(() => {
+              window.location.href = "/dashboard";
+            }, 3000);          }
         })
         .then(() => {
           this.sending = false;

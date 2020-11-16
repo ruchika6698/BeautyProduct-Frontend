@@ -7,10 +7,7 @@ export default {
   getProduct() {
     return httpServices.get("/Product");
   },
-  deleteProduct(data) {
-    return httpServices.post("/Product/Id", data);
+  deleteProduct(Id) {
+    return httpServices.delete("/Product/"+Id);
   },
-  updateProduct(data) {
-    return httpServices.post("/Product/Id", data);
-  }
 };
