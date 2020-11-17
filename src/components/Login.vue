@@ -3,8 +3,15 @@
     <div class="login">Sign In</div>
     <div class="form-container">
       <form novalidate class="md-layout" @submit.prevent="validateUser">
-        <div class="logoDiv"><img alt="Login logo" class="logo" align-items="center" src="../assets/LoginLogo.jpg"></div>
-            <br/><br/>
+        <div class="logoDiv">
+          <img
+            alt="Login logo"
+            class="logo"
+            align-items="center"
+            src="../assets/LoginLogo.jpg"
+          />
+        </div>
+        <br /><br />
         <md-field :class="getValidationClass('EmailId')">
           <label for="EmailId">Email Id</label>
           <md-input
@@ -42,9 +49,7 @@
         </md-field>
 
         <md-card-actions class="button">
-          <md-button
-            class="md-dense md-primary"
-            href="/register"
+          <md-button class="md-dense md-primary" href="/register"
             >Create Account</md-button
           >
           <md-button
@@ -186,27 +191,27 @@ export default {
   padding-bottom: 5%;
   width: 40%;
   border-radius: 5px;
-  border: 1px solid #913C4D;    
+  border: 1px solid #913c4d;
   display: flex;
   flex-direction: column;
-  box-shadow: 0px 1px 5px 2px rgba($color: #913C4D, $alpha: 0.2);
+  box-shadow: 0px 1px 5px 2px rgba($color: #913c4d, $alpha: 0.2);
 }
 .login {
-    margin-top: 4vh;
-    color: #913C4D;
-    font-size: 26px;
-    font-weight: bold;
+  margin-top: 4vh;
+  color: #913c4d;
+  font-size: 26px;
+  font-weight: bold;
 }
-.logo{
-    width: 120px;
-    height: 120px;
-    border-radius: 50px;
-    margin-top: 10%;
+.logo {
+  width: 120px;
+  height: 120px;
+  border-radius: 50px;
+  margin-top: 10%;
 }
-.md-layout{
-    display:flex;
-    justify-content: center;
-    align-items: center !important;
+.md-layout {
+  display: flex;
+  justify-content: center;
+  align-items: center !important;
 }
 .login-helper {
   font-size: 17px;
@@ -229,11 +234,11 @@ export default {
 }
 //Ipad Horizontal
 @media (min-width: 1000px) and (max-width: 1024px) {
-    .container{
-        margin-top: 170px;
-    }
-  .logo{
-      margin-bottom:50px ;
+  .container {
+    margin-top: 170px;
+  }
+  .logo {
+    margin-bottom: 50px;
   }
 }
 @media screen and (max-width: 540px) {

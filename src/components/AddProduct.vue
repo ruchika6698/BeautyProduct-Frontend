@@ -2,8 +2,8 @@
   <div class="container">
     <div class="add">Add Product</div>
     <div class="form-container">
-      <form novalidate class="md-layout" @submit.prevent="validateUser">
-            <br/><br/>
+      <form novalidate class="md-layout" @submit.prevent="validateProduct">
+        <br /><br />
         <md-field :class="getValidationClass('ProductName')">
           <label for="ProductName">Product Name</label>
           <md-input
@@ -26,7 +26,7 @@
           <label for="ProductBrand ">Product Brand</label>
           <md-input
             name="ProductBrand "
-            class="ProductBrand "
+            class="ProductBrand"
             placeholder="Enter Product Brand "
             v-model="form.ProductBrand"
             :disabled="sending"
@@ -39,12 +39,12 @@
             >Product Brand should have at least 3 characters</span
           >
         </md-field>
-        
+
         <md-field :class="getValidationClass('ProductDescription')">
           <label for="ProductDescription ">Product Description </label>
           <md-input
             name="ProductDescription"
-            class="ProductDescription "
+            class="ProductDescription"
             placeholder="Enter Product Description "
             v-model="form.ProductDescription"
             :disabled="sending"
@@ -53,15 +53,17 @@
           <span class="md-error" v-if="!$v.form.ProductDescription.required"
             >Product Description is required</span
           >
-          <span class="md-error" v-else-if="!$v.form.ProductDescription.minlength"
-            >Product Description  should have at least 3 characters</span
+          <span
+            class="md-error"
+            v-else-if="!$v.form.ProductDescription.minlength"
+            >Product Description should have at least 3 characters</span
           >
         </md-field>
         <md-field :class="getValidationClass('Price')">
           <label for="Price ">Price </label>
           <md-input
             name="Price "
-            class="Price "
+            class="Price"
             placeholder="Enter Price "
             v-model="form.Price"
             :disabled="sending"
@@ -70,11 +72,10 @@
           <span class="md-error" v-if="!$v.form.Price.required"
             >Price is required</span
           >
-          
         </md-field>
         <div>
           <label for="Image" class="Image">Image :</label>
-          <input type="file" @change="onFileSelected">
+          <input type="file" @change="onFileSelected" />
         </div>
 
         <md-card-actions class="button">
@@ -181,15 +182,17 @@ export default {
       formData.append("productDescription", this.form.ProductDescription);
       formData.append("price", this.form.Price);
       formData.append("image", this.image);
-    console.log("Form Data",formData);
+      console.log("Form Data",formData);
       productServices
         .addProduct(formData)
         .then(result => {
           if (result.status == "200") {
             this.isSubmit = true;
             console.log("Add Product", result);
-            window.location.href = "/dashboard";
-          }
+            setTimeout(() => {
+              window.location.href = "/dashboard";
+            }, 3000);
+         }
         })
         .then(() => {
           this.sending = false;
@@ -212,7 +215,7 @@ export default {
         };
       }
     },
-    validateUser() {
+    validateProduct() {
       this.$v.$touch();
       if (this.$v.$invalid) {
         this.addProduct();
@@ -240,28 +243,28 @@ export default {
   margin-bottom: 5%;
   width: 40%;
   border-radius: 5px;
-  border: 1px solid #913C4D;    
+  border: 1px solid #913c4d;
   display: flex;
   flex-direction: column;
-  box-shadow: 0px 1px 5px 2px rgba($color: #913C4D, $alpha: 0.2);
+  box-shadow: 0px 1px 5px 2px rgba($color: #913c4d, $alpha: 0.2);
 }
 .add {
-    margin-top: 4vh;
-    margin-bottom: 4vh;
-    color: #913C4D;
-    font-size: 26px;
-    font-weight: bold;
+  margin-top: 4vh;
+  margin-bottom: 4vh;
+  color: #913c4d;
+  font-size: 26px;
+  font-weight: bold;
 }
-.logo{
-    width: 120px;
-    height: 120px;
-    border-radius: 50px;
-    margin-top: 10%;
+.logo {
+  width: 120px;
+  height: 120px;
+  border-radius: 50px;
+  margin-top: 10%;
 }
-.md-layout{
-    display:flex;
-    justify-content: center;
-    align-items: center !important;
+.md-layout {
+  display: flex;
+  justify-content: center;
+  align-items: center !important;
 }
 .form-container {
   position: relative;
@@ -279,11 +282,11 @@ export default {
 }
 //Ipad Horizontal
 @media (min-width: 1000px) and (max-width: 1024px) {
-    .container{
-        margin-top: 170px;
-    }
-  .logo{
-      margin-bottom:50px ;
+  .container {
+    margin-top: 170px;
+  }
+  .logo {
+    margin-bottom: 50px;
   }
 }
 @media screen and (max-width: 540px) {
