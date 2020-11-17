@@ -115,7 +115,7 @@ import productServices from "../services/productServices.js";
   display: flex;
   justify-content: space-between;
   flex-direction: row;
-  background-color: #690519;
+  background-color: #ce3453;
   padding: 10px 40px 10px 40px;
 }
 .menu {
@@ -128,13 +128,13 @@ import productServices from "../services/productServices.js";
   font-size: 16px;
   font-weight: bold;
   color: white !important;
-  background-color: #107bf7;
+  background-color: #e75d78;
   padding: 10px 10px 10px 10px;
   border-radius: 5px;
-  border-color: #107bf7;
+  border-color: #e75d78;
 }
 .buttonDiv {
-  padding-left: 70%;
+  padding-left: 65%;
 }
 .productImage {
   width: 100px;
