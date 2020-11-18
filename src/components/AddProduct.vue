@@ -73,7 +73,7 @@
             >Price is required</span
           >
         </md-field>
-        <div>
+        <div class="ImageDiv">
           <label for="Image" class="Image">Image :</label>
           <input type="file" @change="onFileSelected" />
         </div>
@@ -255,6 +255,10 @@ export default {
   font-size: 26px;
   font-weight: bold;
 }
+.Image{
+  display: flex;
+  justify-content: space-between;
+}
 .logo {
   width: 120px;
   height: 120px;
@@ -271,6 +275,11 @@ export default {
   top: 8%;
   left: 10%;
   width: 80%;
+}
+.ImageDiv{
+  width:80%;
+  display: flex;
+  justify-content: space-between;
 }
 .md-card-actions {
   display: flex;

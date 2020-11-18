@@ -23,10 +23,10 @@
           ></md-input>
 
           <span class="md-error" v-if="!$v.form.EmailId.required"
-            >EmailId is required</span
+            >Email Id is required</span
           >
           <span class="md-error" v-else-if="!$v.form.EmailId.minlength"
-            >EmailId should have at least 3 characters</span
+            >Email Id should have at least 6 characters</span
           >
         </md-field>
         <md-field :class="getValidationClass('Password')">
@@ -106,7 +106,6 @@ export default {
       sending: false,
       isLogin: false,
       invalidCredentials: false,
-      token: null
     };
   },
   validations: {

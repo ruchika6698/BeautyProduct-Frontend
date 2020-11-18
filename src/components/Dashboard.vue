@@ -19,12 +19,13 @@
     <br />
     <md-table class="table">
       <md-table-row>
-        <md-table-head md-numeric class="header">ProductId</md-table-head>
-        <md-table-head class="header">ProductName </md-table-head>
-        <md-table-head class="header">ProductBrand </md-table-head>
-        <md-table-head class="header">ProductDescription </md-table-head>
+        <md-table-head md-numeric class="header">Product Id</md-table-head>
+        <md-table-head class="header">Product Name </md-table-head>
+        <md-table-head class="header">Product Brand </md-table-head>
+        <md-table-head class="header">Product Description </md-table-head>
         <md-table-head class="header">Price </md-table-head>
         <md-table-head class="header">Image </md-table-head>
+        <md-table-head class="header">Edit </md-table-head>
         <md-table-head class="header">Delete </md-table-head>
       </md-table-row>
 
@@ -41,6 +42,17 @@
         <md-table-cell class="row"
           ><img class="productImage" :src="Product.image"
         /></md-table-cell>
+        <md-table-cell class="row">
+          <button class="edit" v-on:click="edit()">
+            <b-icon
+              icon="pencil"
+              class="btn-delete rounded-circle p-2"
+              variant="light"
+              style="width: 30px; height: 30px"
+            ></b-icon>
+          </button>
+        </md-table-cell>
+
         <md-table-cell class="row"
           ><button class="delete" v-on:click="deleteProduct(Product)">
             <b-icon
@@ -62,11 +74,8 @@ import productServices from "../services/productServices.js";
     name: 'TableBasic',
     data() {
     return {
-      isListEmpty: true,
       Products: [],
       Product: null,
-      showDialog: false,
-      isError: false,
     };
   },
   created() {
@@ -80,6 +89,9 @@ import productServices from "../services/productServices.js";
       localStorage.removeItem('Email Id');
       localStorage.removeItem('User Role');
       this.$router.push('/');
+    },
+    edit(){
+      this.$router.push('/updateProduct',{name: 'Update Product', props: {product:this.getProduct()}});
     },
     getProduct() {
       productServices
@@ -105,8 +117,15 @@ import productServices from "../services/productServices.js";
             }).catch(error => {
                 console.log(error);
         });
-       }
-  }
+      }
+    },
+     callUpdate(product) {
+      this.product = product;
+      this.showDialog = true;
+    },
+    closeUpdate() {
+      this.showDialog = false;
+    },
   }
 </script>
 
@@ -121,7 +140,7 @@ import productServices from "../services/productServices.js";
 .menu {
   width: 30px;
   height: 30px;
-  margin-top: 20%;
+  margin-top: 35% !important;
   border-radius: 50px;
 }
 .button {
@@ -156,7 +175,7 @@ import productServices from "../services/productServices.js";
   color: #aa3149 !important;
 }
 .row {
-  font-size: 14px;
+  font-size: 16px;
   text-align: center;
   word-wrap: break-word;
 }
@@ -166,6 +185,11 @@ import productServices from "../services/productServices.js";
   border-radius: 5px;
   font-weight: bold;
   color: rgb(128, 0, 0) !important;
+}
+.edit {
+  background-color: white;
+  border-color: white;
+  color: green !important;
 }
 .delete {
   background-color: white;

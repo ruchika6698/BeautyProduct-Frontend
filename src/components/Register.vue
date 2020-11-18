@@ -68,10 +68,10 @@
           ></md-input>
 
           <span class="md-error" v-if="!$v.form.EmailId.required"
-            >EmailId is required</span
+            >Email Id is required</span
           >
           <span class="md-error" v-else-if="!$v.form.EmailId.minlength"
-            >EmailId should have at least 6 characters</span
+            >Email Id should have at least 6 characters</span
           >
         </md-field>
         <md-field :class="getValidationClass('Password')">
@@ -152,7 +152,6 @@ export default {
       sending: false,
       isRegister: false,
       invalidCredentials: false,
-      token: null
     };
   },
   validations: {
@@ -195,7 +194,9 @@ export default {
           if (result.status == "200") {
             this.isRegister = true;
             console.log("Registration", result.data);
-            window.location.href = "/";
+            setTimeout(() => {
+              window.location.href = "/";
+            }, 3000); 
           }
         })
         .then(() => {
