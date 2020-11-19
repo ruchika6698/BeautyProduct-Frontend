@@ -43,7 +43,7 @@
           ><img class="productImage" :src="Product.image"
         /></md-table-cell>
         <md-table-cell class="row">
-          <button class="edit" v-on:click="edit()">
+          <button class="edit" v-on:click="edit(Product)">
             <b-icon
               icon="pencil"
               class="btn-delete rounded-circle p-2"
@@ -90,8 +90,9 @@ import productServices from "../services/productServices.js";
       localStorage.removeItem('User Role');
       this.$router.push('/');
     },
-    edit(){
-      this.$router.push('/updateProduct',{name: 'Update Product', props: {product:this.getProduct()}});
+    edit(Product){
+      let Id=Product.productId;
+      this.$router.push('/updateProduct/'+Id);
     },
     getProduct() {
       productServices

@@ -2,29 +2,23 @@
   <div class="container">
     <div class="add">Update Product</div>
     <div class="form-container">
-      <form novalidate class="md-layout">
+      <form class="md-layout">
         <br /><br />
-        <md-field>
-          <label for="ProductName">Product Id</label>
-          <md-input
-            name="ProductId"
-            class="ProductName"
-          ></md-input>
-        </md-field>
-
         <md-field>
           <label for="ProductName">Product Name</label>
           <md-input
             name="ProductName"
             class="ProductName"
+            v-model="productName"
           ></md-input>
         </md-field>
 
         <md-field>
           <label for="ProductBrand ">Product Brand</label>
           <md-input
-            name="ProductBrand"
+            name="ProductBrand "
             class="ProductBrand"
+            v-model="productBrand"
           ></md-input>
         </md-field>
 
@@ -33,25 +27,27 @@
           <md-input
             name="ProductDescription"
             class="ProductDescription"
+            v-model="productDescription"
           ></md-input>
         </md-field>
         <md-field>
           <label for="Price ">Price </label>
-          <md-input
-            name="Price "
-            class="Price"
-          ></md-input>
+          <md-input name="Price" class="Price" v-model="price"></md-input>
         </md-field>
         <div class="ImageDiv">
-          <label for="Image" class="Image">Image :</label>
-          <input type="file" @change="onFileSelected" />
+          <div class="Image">
+            <label for="Image" class="Imagetext">Image :</label>
+            <input type="file" @change="onFileSelected" />
+          </div>
+          <br />
+          <div>
+            <img class="productImage" :src="image" />
+          </div>
         </div>
 
         <md-card-actions class="button">
-          <md-button
-            type="submit"
-            class="md-raised md-primary"
-          >Submit</md-button
+          <md-button class="md-raised md-primary" v-on:click="updateProduct()"
+            >Submit</md-button
           >
         </md-card-actions>
       </form>
@@ -63,20 +59,23 @@
 import productServices from "../services/productServices.js";
 export default {
   name: "UpdateProduct",
-  props: ['product'],
+  created() {
+    this.getIDfromURL();
+    this.getProduct();
+  },
   data() {
-    console.log("product data",product);
     return {
-      form: {
-        productId: this.product["productId"],
-        productName: this.product["productName"],
-        productBrand: this.product["productBrand"],
-        productDescription: this.product["productDesription"],
-        price: this.product["price"],
-        image: this.product["image"],
-      },
+      productName: '',
+      productBrand : '',
+      productDescription :'',
+      price: '',
+      image : '',
+      Products: [],
+      Product: null,
+      productId:''
     };
   },
+
   methods: {
     onFileSelected(event){
        //store the image details
@@ -91,11 +90,77 @@ export default {
         this.url = event.target.result;
        }
    },
-
-    updateProduct() {
-      
+    getProduct() {
+      productServices.getProduct().then(result => {
+                if (result.status == "200"){
+                    this.Products=result.data.data;
+                    console.log(this.Products);
+                    console.log(this.productId);
+                    this.Products.find(data => {
+                        if (data.productId == this.productId) {
+                            this.Product=data;
+                            this.productName=this.Product.productName;
+                            this.productBrand=this.Product.productBrand;
+                            this.productDescription=this.Product.productDescription;
+                            this.price=this.Product.price;
+                            this.image=this.Product.image;
+                            console.log(this.Product);
+                        }
+                    })
+                }
+                }).catch(error => {
+                    console.log(error);
+            });
     },
-  },
+    getIDfromURL(){
+      this.productId= window.location.pathname.split('/')[2];
+      console.log(this.productId);
+      return this.productId;
+    },
+    updateProduct(){
+      var formData = new FormData();
+      formData.append("productName", this.productName);
+      formData.append("productBrand", this.productBrand);
+      formData.append("productDescription", this.productDescription);
+      formData.append("price", this.price);
+      formData.append("image", this.image);
+      console.log("Form Data",formData);
+    console.log("Updated Data",formData,this.Product.productId)
+    productServices.updateProduct(this.Product.productId,formData).then(result => {
+               console.log("Updated Data",result);
+
+       if (result.status == "200"){
+        this.makeToast('success',result.data.message);
+        // window.location.href="/dashboard";
+       }
+     }).then( ()=> {
+       this.clearForm();
+     }).catch( error => {
+       console.log("Error:", error.response.status);
+       if (error.response.status == "401"){
+         this.clearForm();
+       }
+       else if (error.response.status == "404"){
+         this.clearForm();
+       }
+     })
+   },
+   makeToast(variant = null, message) {
+        this.$bvToast.toast(message, {
+          toaster:"b-toaster-bottom-center",
+          variant: variant,
+          solid: true
+        })
+   },
+   clearForm() {
+      this.$v.$reset();
+      this.ProductName = null;
+      this.ProductBrand = null;
+      this.ProductDescription = null;
+      this.Price = null;
+      this.Image = null;
+    }
+  }
 };
 </script>
 
@@ -103,7 +168,7 @@ export default {
 .container {
   position: relative;
   left: 30.5vw;
-  top: 8vh;
+  top: 6vh;
   padding-top: 2%;
   padding-bottom: 5%;
   margin-bottom: 5%;
@@ -121,9 +186,14 @@ export default {
   font-size: 26px;
   font-weight: bold;
 }
-.Image{
+.Image {
+  width: 100%;
   display: flex;
   justify-content: space-between;
+  flex-direction: row;
+}
+.Imagetext {
+  width: 50%;
 }
 .logo {
   width: 120px;
@@ -142,10 +212,14 @@ export default {
   left: 10%;
   width: 80%;
 }
-.ImageDiv{
-  width:80%;
+.ImageDiv {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+  flex-direction: column;
+}
+.productImage {
+  width: 200px;
+  height: 200px;
 }
 .md-card-actions {
   display: flex;

@@ -10,7 +10,7 @@ export default {
   deleteProduct(Id) {
     return httpServices.delete("/Product/"+Id);
   },
-  updateProduct(Id,product) {
-    return axios.put("/Product/"+Id, product);
-  },
+  updateProduct(Id,data) {
+    return httpServices.put("/Product/"+Id, data);
+  }
 };

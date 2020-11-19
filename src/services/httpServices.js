@@ -12,7 +12,7 @@ export default {
   delete(productId) {
     return axios.delete(productId);
   },
-  put(data) {
-    return axios.put(data.Id, data);
+  put(url, data) {
+    return axios.put(url, data);
   }
 };

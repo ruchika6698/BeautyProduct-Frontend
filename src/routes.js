@@ -23,5 +23,5 @@ export default [
   { path: "/register", component: Register },
   { path: "/dashboard", component: Dashboard,beforeEnter: guardRoute},
   { path: "/addProduct", component: AddProduct ,beforeEnter: guardRoute},
-  { path: "/updateProduct", component: UpdateProduct ,beforeEnter: guardRoute},
+  { path: "/updateProduct/:Id", component: UpdateProduct ,beforeEnter: guardRoute},
 ];
