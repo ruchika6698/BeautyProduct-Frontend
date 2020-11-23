@@ -1,4 +1,4 @@
-<template>
+ <template>
   <div class="container">
     <div class="add">Add Product</div>
     <div class="form-container">
@@ -31,7 +31,7 @@
             v-model="form.ProductBrand"
             :disabled="sending"
           ></md-input>
-
+                                    
           <span class="md-error" v-if="!$v.form.ProductBrand.required"
             >Product Brand is required</span
           >

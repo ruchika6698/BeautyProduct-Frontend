@@ -72,7 +72,7 @@ export default {
       image : '',
       Products: [],
       Product: null,
-      productId:''
+      productId:'',
     };
   },
 

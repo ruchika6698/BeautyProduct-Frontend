@@ -11,7 +11,9 @@
           >
         </md-card-actions>
       </div>
-      <img alt="User logo" class="user" src="../assets/user.png" />
+      <md-button class="md-fab md-mini">
+        {{ name.charAt(0).toUpperCase() + Lname.charAt(0).toUpperCase() }}
+      </md-button>
       <div class="logoDiv">
         <md-button @click="logout" class="logout">Log out</md-button>
       </div>
@@ -76,10 +78,14 @@ import productServices from "../services/productServices.js";
     return {
       Products: [],
       Product: null,
+      name:'',
+      Lname:''
     };
   },
   created() {
     this.getProduct();
+    this.name=localStorage.getItem("First Name");
+    this.Lname=localStorage.getItem("Last Name");
   },
   methods: {
     logout(){
